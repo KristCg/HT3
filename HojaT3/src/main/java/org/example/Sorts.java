@@ -122,6 +122,9 @@ public class Sorts{
         }
         for (float v : arr) {
             int bi = (int) (n * v);
+            if (bi >= n) {
+                bi = n - 1; 
+            }
             buckets[bi].add(v);
         }
         for (List<Float> bucket : buckets) {
@@ -133,6 +136,30 @@ public class Sorts{
                 arr[index++] = value;
             }
         }
+    }
+    public static void countingSort(int[] arr) {
+        int n = arr.length;
+        if (n == 0) return;
+
+        int max = Arrays.stream(arr).max().getAsInt();
+        int min = Arrays.stream(arr).min().getAsInt();
+        int range = max - min + 1;
+
+        int[] count = new int[range];
+        int[] output = new int[n];
+
+
+        for (int num : arr) {
+            count[num - min]++;
+        }
+        for (int i = 1; i < range; i++) {
+            count[i] += count[i - 1];
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            output[count[arr[i] - min] - 1] = arr[i];
+            count[arr[i] - min]--;
+        }
+        System.arraycopy(output, 0, arr, 0, n);
     }
 
 }
