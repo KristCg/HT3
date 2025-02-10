@@ -1,23 +1,75 @@
 package org.example;
-import java.util.Scanner;
+
+import java.io.*;
+import java.util.*;
 
 public class Generador {
+    private static final String FILE_NAME = "numeros.csv";
+    private static final int NUM_COUNT = 5000;
+
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int op;
+        generarNumerosAleatorios();
+        Integer[] numeros = leerNumerosDesdeArchivo();
 
-        System.out.println("¿Desea iniciar el programa?");
-        System.out.println("1. Si");
-        System.out.println("2. No");
-        op = sc.nextInt();
-        if (op == 1) {
-            System.out.println("Generando números aleatorios...");
-        } else if (op == 2) {
-            System.out.println("Generando números");
-        } else {
-            System.out.println("Opción no valida");
-
+        if (numeros != null) {
+            probarAlgoritmos(numeros);
         }
     }
-}
+
+    private static void generarNumerosAleatorios() {
+        Random rand = new Random();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            for (int i = 0; i < NUM_COUNT; i++) {
+                writer.write(rand.nextInt(10000) + "\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error al escribir el archivo: " + e.getMessage());
+        }
+    }
+
+    private static int[] convertirAEnteros(Integer[] arr) {
+        return Arrays.stream(arr).mapToInt(Integer::intValue).toArray();
+    }
+
+    private static Integer[] leerNumerosDesdeArchivo() {
+        List<Integer> numeros = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                numeros.add(Integer.parseInt(linea.trim()));
+            }
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo: " + e.getMessage());
+            return null;
+        }
+        return numeros.toArray(new Integer[0]);
+    }
+
+    private static void probarAlgoritmos(Integer[] numeros) {
+        probarOrdenamiento("Insertion Sort", convertirAEnteros(numeros), Sorts::insertionSort);
+        probarOrdenamiento("Merge Sort", convertirAEnteros(numeros), arr -> Sorts.mergeSort(arr, 0, arr.length - 1));
+        probarOrdenamiento("Quick Sort", convertirAEnteros(numeros), arr -> Sorts.quickSort(arr, 0, arr.length - 1));
+        probarOrdenamiento("Radix Sort", convertirAEnteros(numeros), arr -> Sorts.radixSort(arr, arr.length));
+
+    }
+
+    private static void probarOrdenamiento(String nombre, int[] arr, Ordenador ordenador) {
+        System.out.println("Probando " + nombre + " con datos aleatorios...");
+        medirTiempoDeEjecucion(arr, ordenador);
+
+        System.out.println("Probando " + nombre + " con datos ya ordenados...");
+        medirTiempoDeEjecucion(arr, ordenador);
+    }
+
+    private static void medirTiempoDeEjecucion(int[] arr, Ordenador ordenador) {
+        long inicio = System.nanoTime();
+        ordenador.ordenar(arr);
+        long fin = System.nanoTime();
+        System.out.println("Tiempo: " + (fin - inicio) / 1e6 + " ms");
+    }
+
+    @FunctionalInterface
+    interface Ordenador {
+        void ordenar(int[] arr);
+    }
 }
