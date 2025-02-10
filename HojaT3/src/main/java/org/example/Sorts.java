@@ -80,4 +80,59 @@ public class Sorts{
         arr[j] = temp;
     }
 
+    public static void radixSort(int arr[], int n) {
+        int m = getMax(arr, n);
+        for (int exp = 1; m / exp > 0; exp *= 10) {
+            countSort(arr, exp);
+        }
+    }
+
+    private static int getMax(int arr[], int n) {
+        int mx = arr[0];
+        for (int i = 1; i < n; i++)
+            if (arr[i] > mx)
+                mx = arr[i];
+        return mx;
+    }
+
+    private static void countSort(int[] arr, int exp) {
+        int n = arr.length;
+        int[] output = new int[n];
+        int[] count = new int[10];
+        Arrays.fill(count, 0);
+
+        for (int value : arr) {
+            count[(value / exp) % 10]++;
+        }
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+            count[(arr[i] / exp) % 10]--;
+        }
+        System.arraycopy(output, 0, arr, 0, n);
+    }
+
+    public static void bucketSort(float[] arr) {
+        int n = arr.length;
+        List<Float>[] buckets = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            buckets[i] = new ArrayList<>();
+        }
+        for (float v : arr) {
+            int bi = (int) (n * v);
+            buckets[bi].add(v);
+        }
+        for (List<Float> bucket : buckets) {
+            bucket.sort(null);
+        }
+        int index = 0;
+        for (List<Float> bucket : buckets) {
+            for (Float value : bucket) {
+                arr[index++] = value;
+            }
+        }
+    }
+
 }
