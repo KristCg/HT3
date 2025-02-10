@@ -28,7 +28,7 @@ public class Sorts{
         }
     }
 
-    private static void merge(int arr[], int l, int m, int r) {
+    public static void merge(int arr[], int l, int m, int r) {
         int n1 = m - l + 1;
         int n2 = r - m;
 
@@ -61,7 +61,7 @@ public class Sorts{
         }
     }
 
-    private static int partition(int[] arr, int low, int high) {
+    public static int partition(int[] arr, int low, int high) {
         int pivot = arr[high];
         int i = low - 1;
         for (int j = low; j < high; j++) {
@@ -74,7 +74,7 @@ public class Sorts{
         return i + 1;
     }
 
-    private static void swap(int[] arr, int i, int j) {
+    public static void swap(int[] arr, int i, int j) {
         int temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
@@ -87,7 +87,7 @@ public class Sorts{
         }
     }
 
-    private static int getMax(int arr[], int n) {
+    public static int getMax(int arr[], int n) {
         int mx = arr[0];
         for (int i = 1; i < n; i++)
             if (arr[i] > mx)
@@ -95,7 +95,7 @@ public class Sorts{
         return mx;
     }
 
-    private static void countSort(int[] arr, int exp) {
+    public static void countSort(int[] arr, int exp) {
         int n = arr.length;
         int[] output = new int[n];
         int[] count = new int[10];
@@ -123,7 +123,7 @@ public class Sorts{
         for (float v : arr) {
             int bi = (int) (n * v);
             if (bi >= n) {
-                bi = n - 1; 
+                bi = n - 1;
             }
             buckets[bi].add(v);
         }

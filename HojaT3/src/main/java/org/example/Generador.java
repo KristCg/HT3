@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Generador {
     private static final String FILE_NAME = "numeros.csv";
-    private static final int NUM_COUNT = 5000;
+    private static final int NUM_COUNT = 10000;
 
     public static void main(String[] args) {
         generarNumerosAleatorios();
